@@ -30,7 +30,7 @@ A Django application that classifies leaf images using a trained PyTorch ResNet1
 5. ResNet18 produces 21 scores. Softmax selects the highest-scoring label and its confidence percentage.
 6. The view saves the English prediction and renders the result with care suggestions.
 
-The frontend uses Django templates, Bootstrap 5.1.3, and Font Awesome 6.0.0. CSS, icons, and Bootstrap JavaScript are served from public CDNs, so full styling requires internet access. The included checkpoint supplies all inference weights; the predictor does not download pretrained weights at startup.
+The frontend uses shared Django templates, local responsive CSS, inline SVG illustrations and icons, and vanilla JavaScript. Google Fonts supplies DM Sans and Manrope, with system font fallbacks when offline. The included checkpoint supplies all inference weights; the predictor does not download pretrained weights at startup.
 
 ## Local Setup
 

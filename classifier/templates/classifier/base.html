@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#244b38"><meta name="description" content="Get to know your plants with AgroVision AI. Upload a leaf image to explore its predicted condition and care suggestions."><title>{% block title %}AgroVision AI{% endblock %}</title><link rel="stylesheet" href="{% static 'classifier/styles.css' %}"></head>
+<body>
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="leaf" viewBox="0 0 24 24"><path d="M20 3C9 2 3 6 4 13c1 8 14 10 16-10Z"/><path d="M3 22 16 9M9 16l-1-6m1 6 6 1"/></symbol>
+<symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+<symbol id="arrow-down" viewBox="0 0 24 24"><path d="M12 4v16m-6-6 6 6 6-6"/></symbol>
+<symbol id="upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+<symbol id="focus" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/><circle cx="12" cy="12" r="4"/></symbol>
+<symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+</defs></svg>
+<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="{% url 'home' %}" aria-label="AgroVision AI home"><span class="brand-mark"><svg class="icon"><use href="#leaf"/></svg></span><span>AgroVision<span class="brand-ai">AI</span></span></a><nav aria-label="Main navigation"><a href="{% url 'home' %}#analysis">Plant analysis</a><a href="{% url 'home' %}#how-it-works">How it works</a><a href="{% url 'home' %}#supported-crops">Supported crops</a></nav><span class="header-note"><span class="status-dot"></span> Made for greener days</span></header>
+<main id="main" class="page-shell">{% block content %}{% endblock %}</main><footer class="site-footer"><a href="{% url 'home' %}" class="footer-brand"><svg class="icon"><use href="#leaf"/></svg> AgroVision AI</a><span>A little science. A lot of growth.</span><span>Plant health, thoughtfully explored.</span></footer>{% block scripts %}{% endblock %}
+</body></html>

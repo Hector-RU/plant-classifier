@@ -1,0 +1,60 @@
+<svg class="botanical" viewBox="0 0 500 390" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="leaf-green" x1="0" y1="0" x2="1" y2=".8">
+            <stop stop-color="#88a06b"/>
+            <stop offset=".48" stop-color="#52764e"/>
+            <stop offset="1" stop-color="#2c573e"/>
+        </linearGradient>
+        <linearGradient id="leaf-light" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#b3bd81"/>
+            <stop offset=".55" stop-color="#8eaa69"/>
+            <stop offset="1" stop-color="#5b7c4d"/>
+        </linearGradient>
+        <filter id="leaf-shadow" x="-40%" y="-20%" width="180%" height="160%">
+            <feDropShadow dx="3" dy="7" stdDeviation="5" flood-color="#244b38" flood-opacity=".12"/>
+        </filter>
+        <!-- The blade and every vein share one local coordinate system.
+             Its origin is the petiole attachment; its tip is (0, -130). -->
+        <g id="botanical-leaf">
+            <path d="M0 0 C-34-23-47-78 0-130 C40-91 42-34 0 0Z"/>
+            <path d="M0 0 C-5-43-3-91 0-130 C40-91 42-34 0 0Z" fill="#163d2b" opacity=".09"/>
+            <g fill="none" stroke="#e0e8b9" stroke-linecap="round">
+                <path d="M0-2 C-5-43-3-88 0-126" stroke-width="1.4" opacity=".65"/>
+                <g stroke-width=".85" opacity=".45">
+                    <path d="M-2-23 Q-17-34-23-51 M-3-43 Q-23-55-27-72 M-3-65 Q-21-76-23-92 M-2-87 Q-13-98-13-110"/>
+                    <path d="M-2-29 Q14-40 23-58 M-3-50 Q17-62 26-79 M-3-73 Q14-84 20-99 M-2-94 Q7-103 10-115"/>
+                </g>
+            </g>
+        </g>
+    </defs>
+
+    <g fill="none" stroke="#cad3bb">
+        <circle cx="260" cy="190" r="145" stroke-width=".8"/>
+        <circle cx="260" cy="190" r="113" stroke-width=".6" stroke-dasharray="2 7"/>
+    </g>
+
+    <!-- Petioles meet the stem and continue directly into each midrib. -->
+    <g fill="none" stroke-linecap="round">
+        <path d="M239 357 C236 311 247 275 258 238 S279 187 275 160" stroke="#587547" stroke-width="4"/>
+        <path d="M239 357 C236 311 247 275 258 238 S279 187 275 160" stroke="#a3b980" stroke-width="1"/>
+        <path d="M249 269 Q246 264 240 260 M264 219 Q270 218 277 212 M239 319 Q232 318 225 310" stroke="#587547" stroke-width="2.5"/>
+    </g>
+
+    <g filter="url(#leaf-shadow)">
+        <use href="#botanical-leaf" transform="translate(240 260) rotate(-54) scale(1.08)" fill="url(#leaf-green)"/>
+        <use href="#botanical-leaf" transform="translate(277 212) rotate(49) scale(1.12)" fill="url(#leaf-green)"/>
+        <use href="#botanical-leaf" transform="translate(275 160) rotate(-10) scale(.86)" fill="url(#leaf-light)"/>
+        <use href="#botanical-leaf" transform="translate(225 310) rotate(-55) scale(.67)" fill="url(#leaf-light)"/>
+    </g>
+
+    <g fill="none" stroke="#7f9373" stroke-width=".8">
+        <path d="M359 211 H413 V254 M162 158 H112 V106"/>
+        <circle cx="359" cy="211" r="3" fill="#e8ecdd"/>
+        <circle cx="162" cy="158" r="3" fill="#e8ecdd"/>
+        <path d="M87 289h15m-7-7v15m316-220h15m-7-7v15"/>
+    </g>
+    <g font-family="monospace" font-size="9" fill="#65755c" letter-spacing="1">
+        <text x="374" y="271">OBSERVE</text>
+        <text x="77" y="96">GROW</text>
+    </g>
+</svg>
