@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroVision AI - Plant Disease Classification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --bg-color: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: #f8fff9;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .preview-section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .preview-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .image-preview {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-info {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .analyze-btn {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: auto;
+            min-width: 200px;
+        }
+
+        .analyze-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .analyze-btn:disabled {
+            background-color: #95a5a6;
+            transform: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            background-color: #fdf0ed;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        #file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1><i class="fas fa-leaf"></i> AgroVision AI</h1>
+            <p class="text-muted">Plant Disease Classification</p>
+            <p>Upload a leaf image to classify its condition.</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="upload-form">
+            {% csrf_token %}
+            <div class="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Drag and drop your image here</h3>
+                    <p>or</p>
+                    <button type="button" class="btn btn-outline-success" onclick="document.getElementById('file-input').click()">
+                        Choose Image
+                    </button>
+                    <input type="file" id="file-input" name="image" accept="image/*" required>
+                </div>
+            </div>
+
+            <div class="preview-section" id="preview-section">
+                <div class="preview-container">
+                    <div class="image-preview">
+                        <img id="preview-image" src="#" alt="Image preview">
+                    </div>
+                    <div class="preview-info">
+                        <h3>Selected image</h3>
+                        <p id="file-name"></p>
+                        <p id="file-size"></p>
+                        <button type="submit" class="analyze-btn">
+                            <i class="fas fa-microscope"></i> Analyze Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="error-message" id="error-message" role="alert"{% if error %} style="display: block;"{% endif %}>
+            {% if error %}
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            {% endif %}
+        </div>
+
+        <div class="features-section">
+            <div class="feature-card">
+                <i class="fas fa-seedling feature-icon"></i>
+                <h4>5 Supported Crops</h4>
+                <p>Bell pepper, tomato, peach, potato, and corn</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-virus-slash feature-icon"></i>
+                <h4>21 Classification Labels</h4>
+                <p>Healthy leaves and multiple disease conditions</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-tachometer-alt feature-icon"></i>
+                <h4>Image Analysis</h4>
+                <p>Predicted condition and confidence score</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const previewSection = document.getElementById('preview-section');
+        const previewImage = document.getElementById('preview-image');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        const form = document.getElementById('upload-form');
+        const errorMessage = document.getElementById('error-message');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            uploadArea.classList.add('border-success');
+        }
+
+        function unhighlight(e) {
+            uploadArea.classList.remove('border-success');
+        }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            handleFiles(files);
+        }
+
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    // A dropped file must also be attached to the multipart form.
+                    const transfer = new DataTransfer();
+                    transfer.items.add(file);
+                    fileInput.files = transfer.files;
+                    errorMessage.style.display = 'none';
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        fileName.textContent = `Name: ${file.name}`;
+                        fileSize.textContent = `Size: ${formatFileSize(file.size)}`;
+                        previewSection.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    showError('Please select a valid image file.');
+                }
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        form.addEventListener('submit', function(e) {
+            const submitButton = document.querySelector('.analyze-btn');
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            submitButton.disabled = true;
+        });
+    </script>
+</body>
+</html>
